@@ -12,7 +12,11 @@ RUN pip install Flask
 RUN mkdir -p /opt/app
 
 ADD . /opt/app
+ADD ./scripts/nginx.conf /etc/nginx/sites-enabled/default
 
 EXPOSE 5000
+EXPOSE 80
 
-CMD bash
+WORKDIR /opt/app
+
+CMD ./start.sh
