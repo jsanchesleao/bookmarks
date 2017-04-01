@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "test": "mocha --recursive test/"
+    "test": "mocha --recursive test"
   },
   "repository": {
     "type": "git",
@@ -19,9 +19,18 @@
   },
   "homepage": "https://github.com/jsanchesleao/bookmarks#readme",
   "dependencies": {
-    "express": "^4.15.2"
+    "bcrypt": "^1.0.2",
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.17.1",
+    "enforcement": "0.0.9",
+    "express": "^4.15.2",
+    "express-bearer-token": "^2.1.0",
+    "lodash": "^4.17.4",
+    "mongodb": "^2.2.25",
+    "randomstring": "^1.1.5"
   },
   "devDependencies": {
+    "chai": "^3.5.0",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0"
   }

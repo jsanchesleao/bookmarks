@@ -1,3 +1,4 @@
 {
-  "port": 4001
+  "port": 4001,
+  "mongoUrl": "mongodb://localhost:27017/bookmarks"
 }
