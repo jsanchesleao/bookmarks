@@ -1,5 +1,9 @@
 # Bookmark API
 
+## Requirements
+
+You will need Node.js version 7.x or higher and MongoDB version 3.x or higher
+
 ## Configuration
 
 Edit the `config.json` file to change the tcp port that will be used, and to set the MongoDB connection string
