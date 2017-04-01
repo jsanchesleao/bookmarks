@@ -1,0 +1,19 @@
+collection: user:
+
+{
+    type: "client",
+    username: "foo",
+    passwd: "saltedhash",
+    bookmarks: [
+
+    ]
+}
+
+
+collection: token:
+
+{
+     text: "randomhash",
+     user: "foo",
+     lastRead: unixepoch
+}

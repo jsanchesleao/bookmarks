@@ -1,0 +1,28 @@
+{
+  "name": "bookmarks",
+  "version": "1.0.0",
+  "description": "bookmark manager",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "nodemon src/app.js",
+    "test": "mocha --recursive test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsanchesleao/bookmarks.git"
+  },
+  "author": "Jeferson Leao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jsanchesleao/bookmarks/issues"
+  },
+  "homepage": "https://github.com/jsanchesleao/bookmarks#readme",
+  "dependencies": {
+    "express": "^4.15.2"
+  },
+  "devDependencies": {
+    "mocha": "^3.2.0",
+    "nodemon": "^1.11.0"
+  }
+}
