@@ -24,7 +24,7 @@ function comparePassword(password, hashedPassword) {
   return new Promise(function(resolve, reject) {
     bcrypt.compare(password, hashedPassword, function(error, result) {
       if (error) {
-        reject(error)
+        reject({type: 'password-dont-match'})
       }
       else if (!result) {
         reject({type: 'password-dont-match'})

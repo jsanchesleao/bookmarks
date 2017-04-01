@@ -2,18 +2,24 @@ const validation = require('./validation')
 const userModel  = require('./userModel')
 const errorHandler = require('./errorHandler')
 
+const _ = require('lodash')
+
 module.exports = function(db) {
 
   const getUserByName = errorHandler.decorate((req, res) => {
     const name = req.params.username
     return userModel.getUserByName(db, name).then(user => {
       if (user) {
-        return user
+        return _.omit(user, ['_id', 'bookmarks','password'])
       }
       else {
         return Promise.reject({type: 'user-not-found'})
       }
     })
+  })
+
+  const listClients = errorHandler.decorate((req, res) => {
+    return userModel.listClients(db, req.token)
   })
 
   const saveUser = errorHandler.decorate((req, res) => {
@@ -52,34 +58,56 @@ module.exports = function(db) {
     return userModel.getUserBookmarks(db, username, token)
   })
 
-  const addBookmark = errorHandler.decorate((req, res) => {
+  const saveBookmark = errorHandler.decorate((req, res) => {
     const username = req.params.username
+    const bookmarkName = req.params.bookmark
     const body = req.body
     const token = req.token
 
-    const check = validation.checkBookmark(body)
+    const check = validation.checkSaveBookmarkRequest(body)
 
     if (check.success) {
-      return userModel.addBookmark(db, username, body, token).then(() => ({success: true}))
+      body.name = bookmarkName
+      return userModel.saveBookmark(db, username, body, token).then(() => ({success: true}))
     }
     else {
       return Promise.reject({type: 'validation-error', error: check.error})
     }
   })
 
-  function removeBookmark(req, res) {
+  const removeBookmark = errorHandler.decorate((req, res) => {
+    const username = req.params.username
+    const bookmarkName = req.params.bookmark
+    const token = req.token
 
-  }
+    return userModel.removeBookmark(db, username, bookmarkName, token).then(() => ({success: true}))
+  })
 
-  function updateBookmark(req, res) {
+  const updateBookmark = errorHandler.decorate((req, res) => {
+    const username = req.params.username
+    const bookmarkName = req.params.bookmark
+    const body = req.body
+    const token = req.token
 
-  }
+    const check = validation.checkUpdateBookmarkRequest(body)
+
+    if (check.success) {
+      body.name = bookmarkName
+      return userModel.updateBookmark(db, username, body, token).then(() => ({success: true}))
+    }
+    else {
+      return Promise.reject({type: 'validation-error', error: check.error})
+    }
+  })
 
   return {
+    listClients: listClients,
     getUserByName: getUserByName,
     saveUser: saveUser,
     authenticate: authenticate,
     getBookmarks: getBookmarks,
-    addBookmark: addBookmark
+    saveBookmark: saveBookmark,
+    removeBookmark: removeBookmark,
+    updateBookmark: updateBookmark
   }
 }

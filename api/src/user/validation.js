@@ -11,9 +11,12 @@ const LoginRequest = validator.Schema({
   password: 'required string'
 })
 
-const Bookmark = validator.Schema({
-  url: 'required string',
-  name: 'required string'
+const SaveBookmarkRequest = validator.Schema({
+  url: 'required string'
+})
+
+const UpdateBookmarkRequest = validator.Schema({
+  url: 'required string'
 })
 
 const check = Schema => object => {
@@ -29,5 +32,6 @@ const check = Schema => object => {
 module.exports = {
   checkUser: check(User),
   checkLoginRequest: check(LoginRequest),
-  checkBookmark: check(Bookmark)
+  checkSaveBookmarkRequest: check(SaveBookmarkRequest),
+  checkUpdateBookmarkRequest: check(UpdateBookmarkRequest)
 }

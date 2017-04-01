@@ -8,57 +8,78 @@ function saveToken(db, user) {
     .then(coll => coll.insertOne({
       username: user.username,
       type: user.type || 'client',
-      token: token
+      token: token,
+      createdAt: new Date()
     }))
     .then(() => ({token: token}))
 }
 
+const expirationParam = function() {
+  const limit = new Date()
+  limit.setDate(limit.getDate() - 1)
+
+  return {
+    $gte: limit
+  }
+}
+
+function validateToken(db, token) {
+  return db.collection(TOKEN_COLLECTION)
+    .then(coll => coll.findOne({token: token, createdAt: expirationParam()}))
+    .then(doc => {
+      if (!doc) {
+        return Promise.reject({type: 'token-not-found'})
+      }
+      else {
+        return Promise.resolve({type: 'token-ok'})
+      }
+    })
+}
+
 function validateTokenRole(db, token, role) {
   return db.collection(TOKEN_COLLECTION)
-    .then(coll => coll.findOne({token: token}))
+    .then(coll => coll.findOne({token: token, createdAt: expirationParam()}))
     .then(doc => {
       if (!doc) {
         return Promise.reject({type: 'token-not-found'})
       }
       else if (doc.type === role) {
-        return Promise.resolve({type: 'role-ok'})
+        return Promise.resolve({type: 'token-ok'})
       }
       else {
-        return Promise.reject({type: 'role-not-ok'})
+        return Promise.reject({type: 'token-not-ok'})
       }
     })
 }
 
 function validateTokenClient(db, token, username) {
   return db.collection(TOKEN_COLLECTION)
-    .then(coll => coll.findOne({token: token}))
+    .then(coll => coll.findOne({token: token, createdAt: expirationParam()}))
     .then(doc => {
-      console.log('TOKEN DOC', doc)
       if (!doc) {
         return Promise.reject({type: 'token-not-found'})
       }
       else if (doc.type === 'admin' || doc.username === username) {
-        return Promise.resolve({type: 'role-ok'})
+        return Promise.resolve({type: 'token-ok'})
       }
       else {
-        return Promise.reject({type: 'role-not-ok'})
+        return Promise.reject({type: 'token-not-ok'})
       }
     })
 }
 
 function validateTokenUsername(db, token, username) {
   return db.collection(TOKEN_COLLECTION)
-    .then(coll => coll.findOne({token: token}))
+    .then(coll => coll.findOne({token: token, createdAt: expirationParam()}))
     .then(doc => {
-      console.log('TOKEN DOC', doc)
       if (!doc) {
         return Promise.reject({type: 'token-not-found'})
       }
       else if (doc.username === username) {
-        return Promise.resolve({type: 'role-ok'})
+        return Promise.resolve({type: 'token-ok'})
       }
       else {
-        return Promise.reject({type: 'role-not-ok'})
+        return Promise.reject({type: 'token-not-ok'})
       }
     })
 }

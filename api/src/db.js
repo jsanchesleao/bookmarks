@@ -17,9 +17,9 @@ function collection(coll) {
   return db.then(db => db.collection(coll))
 }
 
-function insertOne(coll, data) {
+function find(coll, query, select) {
   return new Promise(function(resolve, reject) {
-    coll.insertOne(data, function(err, result) {
+    coll.find(query, select).toArray(function(err, result) {
       if (err) {
         reject(err)
       }
@@ -31,5 +31,6 @@ function insertOne(coll, data) {
 }
 
 module.exports = {
-  collection: collection
+  collection: collection,
+  find: find
 }
