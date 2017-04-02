@@ -1,8 +1,7 @@
 from flask import Blueprint, render_template, request, json, session, redirect
 from login.loginRoutes import perform_login
+from users.usersRepository import save_user
 
-import requests
-import config
 
 app_signup = Blueprint('app_signup', __name__, template_folder='templates')
 
@@ -15,16 +14,11 @@ def login_page():
 
 
 def perform_registration(username, password):
-    url = config.bookmark_api_url() + '/user'
-    r = requests.post(url,
-      json = {'username': username, 'password': password},
-      headers = {'Content-Type': 'application/json'})
-
-    result = r.json()
+    result = save_user(username, password)
     if 'success' in result:
         return handle_registration_response(result['success'], username, password)
     else:
-        return json.dumps({'success': False}), 422
+        return json.dumps(result), 422
 
 def handle_registration_response(success, username, password):
     if success:

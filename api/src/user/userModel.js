@@ -12,7 +12,7 @@ function getUserByName(db, username) {
 function listClients(db, token) {
   return tokenModel.validateTokenRole(db, token, 'admin')
     .then(() => db.collection(USER_COLLECTION))
-    .then(coll => db.find(coll, {}, {username: 1, _id: 0}))
+    .then(coll => db.find(coll, {type: 'client'}, {username: 1, _id: 0}))
 }
 
 function saveUser(db, user, token) {

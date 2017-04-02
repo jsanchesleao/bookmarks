@@ -7,7 +7,16 @@ const submitSignUpForm = onSubmit => e => {
   return false
 }
 
-const SignUpForm = ({displayError, username, password, onChangeUsername, onChangePassword, onSubmit}) => (
+function displayErrorMessage(errorType) {
+  switch (errorType) {
+    case 'username-taken':
+      return 'This username has already been taken'
+    default:
+      return 'Registration failed.'
+  }
+}
+
+const SignUpForm = ({displayError, errorType, username, password, onChangeUsername, onChangePassword, onSubmit}) => (
   <div className="row">
     <div className="col-md-6 col-md-offset-3 col-xs-12">
       <h1>Sign Up</h1>
@@ -22,7 +31,9 @@ const SignUpForm = ({displayError, username, password, onChangeUsername, onChang
         </div>
         <button type="submit" className="btn btn-primary">Sign Up</button>
         {displayError && (
-          <div className="alert alert-danger">Registration failed.</div>
+          <div className="alert alert-danger">
+            {displayErrorMessage(errorType)}
+          </div>
         )}
       </form>
       <a href="/login">I already have an account.</a>
@@ -55,6 +66,7 @@ export default class extends React.Component {
         <NavBar />
         <SignUpForm
           displayError={this.state.failure}
+          errorType={this.state.message}
           username={this.state.username}
           password={this.state.password}
           onChangeUsername={this.actions.changeUsername(this.store)}

@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export const initialState = {
   bookmarks: [],
   bookmarkName: '',
@@ -6,24 +8,10 @@ export const initialState = {
   displayForm: false
 }
 
-function sortByName(bookmarks) {
-  return bookmarks.sort(function(a, b) {
-    if (a.name < b.name) {
-      return -1
-    }
-    else if (a.name > b.name) {
-      return 1
-    }
-    else {
-      return 0
-    }
-  })
-}
-
 export const reducer = function(state = initialState, action) {
   switch (action.type) {
     case 'change-user-bookmarks':
-      return {...state, bookmarks: sortByName(action.value)}
+      return {...state, bookmarks: _.sortBy(action.value, ['name'])}
     case 'change-user-bookmark-name':
       return {...state, bookmarkName: action.value}
     case 'change-user-bookmark-url':

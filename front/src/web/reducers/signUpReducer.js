@@ -1,7 +1,8 @@
 export const initialState = {
-  username: 'foo',
-  password: 'bar',
-  failure: false
+  username: '',
+  password: '',
+  failure: false,
+  errorMessage: ''
 }
 
 export const reducer = function(state = initialState, action) {
@@ -11,7 +12,7 @@ export const reducer = function(state = initialState, action) {
       case 'change-signup-form-password':
         return {...state, password: action.value, failure: false}
       case 'signup-failed':
-        return {...state, failure: true}
+        return {...state, failure: true, errorMessage: action.message}
     default:
       return state
   }

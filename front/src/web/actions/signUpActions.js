@@ -29,7 +29,7 @@ export const performSignUp = store => () => {
         window.location = '/'
       }
       else {
-        store.dispatch({type: 'signup-failed'})
+        store.dispatch({type: 'signup-failed', message: json.type})
       }
     }
 })

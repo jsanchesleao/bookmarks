@@ -1,5 +1,6 @@
 import React from 'react'
 import NavBar from './NavBar'
+import BookmarkList from './BookmarkList'
 
 import { Modal } from 'react-bootstrap'
 
@@ -7,44 +8,6 @@ function selectState(state) {
   return state.bookmarks
 }
 
-const BookmarksList = ({onAddBookmark, bookmarks, onEdit, onRemove}) => (
-  <div className="row">
-    <div className="col-md-8 col-md-offset-2 col-xs-12">
-      <h1>My Bookmarks</h1>
-      <div className="list-group">
-        <button className="list-group-item active" onClick={onAddBookmark}>
-          Add Bookmark
-        </button>
-        {bookmarks.map(b => (
-          <div className="list-group-item" key={b.name}>
-            <div className="row">
-              <div className="col-md-2 col-xs-12">
-                <h4>{b.name}</h4>
-              </div>
-              <div className="col-md-6 col-xs-12">
-                <h5><a href={b.url} target="_blank">{b.url}</a></h5>
-              </div>
-              <div className="col-md-2 hidden-xs">
-                <button className="btn btn-primary btn-block" onClick={onEdit(b)}>Edit</button>
-              </div>
-              <div className="col-md-2 hidden-xs">
-                <button className="btn btn-danger btn-block" onClick={onRemove(b)}>Remove</button>
-              </div>
-            </div>
-            <div className="row visible-xs-block">
-              <div className="col-xs-6">
-                <button className="btn btn-primary btn-block" onClick={onEdit(b)}>Edit</button>
-              </div>
-              <div className="col-xs-6">
-                <button className="btn btn-danger btn-block" onClick={onRemove(b)}>Remove</button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-)
 
 const BookmarkForm = ({show, onClose, onSubmit, name, url, onChangeName, onChangeUrl, editing}) => (
   <Modal show={show}>
@@ -102,7 +65,9 @@ export default class extends React.Component {
       <div className="container">
 
         <NavBar logout={true}/>
-        <BookmarksList
+        <BookmarkList
+          displayActions={true}
+          title="My Bookmarks"
           bookmarks={this.state.bookmarks}
           onAddBookmark={this.actions.addBookmark(this.store)}
           onEdit={this.actions.onClickEditBookmark(this.store)}
