@@ -14,6 +14,10 @@ To get up and running, just execute `npm install` and then `npm start`.
 
 By default, no `admin` user is created, so if you need any, you can run `node src/insertAdmin.js <username> <password>` and one will be created.
 
+## Run the Tests
+
+Simple execute `npm test` to run the test suite
+
 ## Endpoints
 
 ### POST /authenticate
