@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head></head>
-  <body>
-    {% if username %}
-      <h1>Bookmarks of {{ username }}!</h1>
-    {% else %}
-      <h1>No user logged in</h1>
-    {% endif %}
-  </body>
-</html>
+{% extends 'layout.html' %}
+{% block title %}Your Bookmarks{% endblock %}
+{% block body %}
+<div id="container-bookmarks"></div>
+
+<script src="/static/js/app.js"></script>
+{% endblock %}

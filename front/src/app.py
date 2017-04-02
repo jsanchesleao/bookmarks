@@ -1,8 +1,15 @@
 from flask import Flask, render_template, session, redirect
-from login.loginRoutes import login, login_page
+
+from login.loginRoutes import login
+from signup.signupRoutes import app_signup
+from bookmarks.bookmarksRoutes import bookmarks
+from admin.adminRoutes import admin
 
 app = Flask(__name__)
 app.register_blueprint(login)
+app.register_blueprint(app_signup)
+app.register_blueprint(bookmarks)
+app.register_blueprint(admin)
 
 @app.route('/')
 def home():
@@ -16,21 +23,6 @@ def page_for(role):
         return redirect('/admin')
     else:
         return redirect('/bookmarks')
-
-@app.route('/signup')
-def signup_page():
-    return render_template('signup.html')
-
-@app.route('/bookmarks')
-def bookmarks_page_user():
-    if 'token' in session:
-        return render_template('bookmarks.html')
-    else:
-        return redirect('/login')
-
-@app.route('/admin')
-def admin_page():
-    return render_template('admin.html')
 
 app.secret_key = 'VSK6Wx32GhpbAKojh6aF'
 

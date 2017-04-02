@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "compile": "browserify -t [ babelify --sourceType module ] src/web/app.js -o static/js/app.js",
+    "compile": "browserify -t babelify src/web/app.js -o static/js/app.js",
     "test": "mocha --compilers js:babel-register --recursive src/web/test"
   },
   "author": "",

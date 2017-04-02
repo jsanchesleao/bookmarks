@@ -1,16 +1,16 @@
 export const initialState = {
-  username: '',
-  password: '',
+  username: 'foo',
+  password: 'bar',
   failure: false
 }
 
 export const reducer = function(state = initialState, action) {
   switch (action.type) {
-    case 'change-login-form-username':
+    case 'change-signup-form-username':
       return {...state, username: action.value, failure: false}
-      case 'change-login-form-password':
+      case 'change-signup-form-password':
         return {...state, password: action.value, failure: false}
-      case 'authentication-failed':
+      case 'signup-failed':
         return {...state, failure: true}
     default:
       return state

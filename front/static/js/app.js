@@ -21833,6 +21833,12 @@ function extend() {
 }
 
 },{}],210:[function(require,module,exports){
+"use strict";
+
+},{}],211:[function(require,module,exports){
+"use strict";
+
+},{}],212:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -21897,7 +21903,64 @@ var performLogin = exports.performLogin = function performLogin(store) {
   };
 };
 
-},{"xhr":203}],211:[function(require,module,exports){
+},{"xhr":203}],213:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.performSignUp = exports.changePassword = exports.changeUsername = undefined;
+
+var _xhr = require('xhr');
+
+var _xhr2 = _interopRequireDefault(_xhr);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var changeUsername = exports.changeUsername = function changeUsername(store) {
+  return function (e) {
+    e.preventDefault();
+    store.dispatch({ type: 'change-signup-form-username', value: e.target.value });
+  };
+};
+
+var changePassword = exports.changePassword = function changePassword(store) {
+  return function (e) {
+    e.preventDefault();
+    store.dispatch({ type: 'change-signup-form-password', value: e.target.value });
+  };
+};
+
+var performSignUp = exports.performSignUp = function performSignUp(store) {
+  return function () {
+    var _store$getState$signU = store.getState().signUp,
+        username = _store$getState$signU.username,
+        password = _store$getState$signU.password;
+
+    (0, _xhr2.default)({
+      uri: "/signup",
+      method: 'POST',
+      body: JSON.stringify({ username: username, password: password }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }, function (err, resp, body) {
+      if (err) {
+        console.error(err);
+      } else {
+        alert(body);
+        var json = JSON.parse(body);
+        if (json.success) {
+          window.location = '/';
+        } else {
+          store.dispatch({ type: 'signup-failed' });
+        }
+      }
+    });
+  };
+};
+
+},{"xhr":203}],214:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -21916,20 +21979,52 @@ var _LoginPage = require('./components/LoginPage');
 
 var _LoginPage2 = _interopRequireDefault(_LoginPage);
 
+var _SignUpPage = require('./components/SignUpPage');
+
+var _SignUpPage2 = _interopRequireDefault(_SignUpPage);
+
+var _AdminPage = require('./components/AdminPage');
+
+var _AdminPage2 = _interopRequireDefault(_AdminPage);
+
+var _BookmarksPage = require('./components/BookmarksPage');
+
+var _BookmarksPage2 = _interopRequireDefault(_BookmarksPage);
+
 var _loginActions = require('./actions/loginActions');
 
 var loginActions = _interopRequireWildcard(_loginActions);
+
+var _signUpActions = require('./actions/signUpActions');
+
+var signUpActions = _interopRequireWildcard(_signUpActions);
+
+var _adminActions = require('./actions/adminActions');
+
+var adminActions = _interopRequireWildcard(_adminActions);
+
+var _bookmarksActions = require('./actions/bookmarksActions');
+
+var bookmarksActions = _interopRequireWildcard(_bookmarksActions);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var container = document.getElementById('container');
+function renderPage(Component, actions, containerId) {
+  var container = document.getElementById(containerId);
+  if (container) {
+    _reactDom2.default.render(_react2.default.createElement(Component, { store: _store2.default, actions: actions }), container);
+  }
+}
 
-_reactDom2.default.render(_react2.default.createElement(_LoginPage2.default, { store: _store2.default, actions: loginActions }), container);
+renderPage(_LoginPage2.default, loginActions, 'container-login');
+renderPage(_SignUpPage2.default, signUpActions, 'container-signup');
+renderPage(_AdminPage2.default, adminActions, 'container-admin');
+renderPage(_BookmarksPage2.default, bookmarksActions, 'container-bookmarks');
 
-},{"./actions/loginActions":210,"./components/LoginPage":212,"./store":214,"react":182,"react-dom":2}],212:[function(require,module,exports){
-"use strict";
+},{"./actions/adminActions":210,"./actions/bookmarksActions":211,"./actions/loginActions":212,"./actions/signUpActions":213,"./components/AdminPage":215,"./components/BookmarksPage":216,"./components/LoginPage":217,"./components/SignUpPage":219,"./store":224,"react":182,"react-dom":2}],215:[function(require,module,exports){
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -21937,9 +22032,13 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
+
+var _NavBar = require('./NavBar');
+
+var _NavBar2 = _interopRequireDefault(_NavBar);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -21949,25 +22048,157 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var NavBar = function NavBar() {
-  return _react2.default.createElement(
-    "nav",
-    { className: "navbar navbar-default" },
-    _react2.default.createElement(
-      "div",
-      { className: "container-fluid" },
-      _react2.default.createElement(
-        "div",
-        { className: "navbar-header" },
+function selectState(state) {
+  return state.admin;
+}
+
+var _class = function (_React$Component) {
+  _inherits(_class, _React$Component);
+
+  function _class(_ref) {
+    var store = _ref.store,
+        actions = _ref.actions;
+
+    _classCallCheck(this, _class);
+
+    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+    _this.actions = actions;
+    _this.store = store;
+    _this.state = selectState(store.getState());
+    _this.unsubscribe = store.subscribe(function () {
+      return _this.setState(selectState(store.getState()));
+    });
+    return _this;
+  }
+
+  _createClass(_class, [{
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this.unsubscribe && this.unsubscribe();
+      this.unsubscribe = null;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'container' },
+        _react2.default.createElement(_NavBar2.default, null),
         _react2.default.createElement(
-          "a",
-          { className: "navbar-brand", href: "#" },
-          "Bookmarks"
+          'h1',
+          null,
+          'Admin Page'
         )
-      )
-    )
-  );
-};
+      );
+    }
+  }]);
+
+  return _class;
+}(_react2.default.Component);
+
+exports.default = _class;
+
+},{"./NavBar":218,"react":182}],216:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _NavBar = require('./NavBar');
+
+var _NavBar2 = _interopRequireDefault(_NavBar);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+function selectState(state) {
+  return state.bookmarks;
+}
+
+var _class = function (_React$Component) {
+  _inherits(_class, _React$Component);
+
+  function _class(_ref) {
+    var store = _ref.store,
+        actions = _ref.actions;
+
+    _classCallCheck(this, _class);
+
+    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+    _this.actions = actions;
+    _this.store = store;
+    _this.state = selectState(store.getState());
+    _this.unsubscribe = store.subscribe(function () {
+      return _this.setState(selectState(store.getState()));
+    });
+    return _this;
+  }
+
+  _createClass(_class, [{
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this.unsubscribe && this.unsubscribe();
+      this.unsubscribe = null;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'container' },
+        _react2.default.createElement(_NavBar2.default, null),
+        _react2.default.createElement(
+          'h1',
+          null,
+          'Bookmarks Page'
+        )
+      );
+    }
+  }]);
+
+  return _class;
+}(_react2.default.Component);
+
+exports.default = _class;
+
+},{"./NavBar":218,"react":182}],217:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _NavBar = require('./NavBar');
+
+var _NavBar2 = _interopRequireDefault(_NavBar);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var submitLoginForm = function submitLoginForm(onSubmit) {
   return function (e) {
@@ -21985,49 +22216,54 @@ var LoginForm = function LoginForm(_ref) {
       onChangePassword = _ref.onChangePassword,
       onSubmit = _ref.onSubmit;
   return _react2.default.createElement(
-    "div",
-    { className: "row" },
+    'div',
+    { className: 'row' },
     _react2.default.createElement(
-      "div",
-      { className: "col-md-6 col-md-offset-3 col-xs-12" },
+      'div',
+      { className: 'col-md-6 col-md-offset-3 col-xs-12' },
       _react2.default.createElement(
-        "form",
+        'h1',
+        null,
+        'Sign In'
+      ),
+      _react2.default.createElement(
+        'form',
         { onSubmit: submitLoginForm(onSubmit) },
         _react2.default.createElement(
-          "div",
-          { className: "form-group" },
+          'div',
+          { className: 'form-group' },
           _react2.default.createElement(
-            "label",
-            { htmlFor: "inputUsername" },
-            "Username"
+            'label',
+            { htmlFor: 'inputUsername' },
+            'Username'
           ),
-          _react2.default.createElement("input", { type: "text", className: "form-control", id: "inputUsername", value: username, onChange: onChangeUsername })
+          _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'inputUsername', value: username, onChange: onChangeUsername })
         ),
         _react2.default.createElement(
-          "div",
-          { className: "form-group" },
+          'div',
+          { className: 'form-group' },
           _react2.default.createElement(
-            "label",
-            { htmlFor: "inputPassword" },
-            "Password"
+            'label',
+            { htmlFor: 'inputPassword' },
+            'Password'
           ),
-          _react2.default.createElement("input", { type: "password", className: "form-control", id: "inputPassword", value: password, onChange: onChangePassword })
+          _react2.default.createElement('input', { type: 'password', className: 'form-control', id: 'inputPassword', value: password, onChange: onChangePassword })
         ),
         _react2.default.createElement(
-          "button",
-          { type: "submit", className: "btn btn-primary" },
-          "Sign In"
+          'button',
+          { type: 'submit', className: 'btn btn-primary' },
+          'Sign In'
         ),
         displayError && _react2.default.createElement(
-          "div",
-          { className: "alert alert-danger" },
-          "Login failed."
+          'div',
+          { className: 'alert alert-danger' },
+          'Login failed.'
         )
       ),
       _react2.default.createElement(
-        "a",
-        { href: "/signup" },
-        "I don't have an account."
+        'a',
+        { href: '/signup' },
+        'I don\'t have an account.'
       )
     )
   );
@@ -22058,18 +22294,18 @@ var _class = function (_React$Component) {
   }
 
   _createClass(_class, [{
-    key: "componentWillUnmount",
+    key: 'componentWillUnmount',
     value: function componentWillUnmount() {
       this.unsubscribe && this.unsubscribe();
       this.unsubscribe = null;
     }
   }, {
-    key: "render",
+    key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        "div",
-        { className: "container" },
-        _react2.default.createElement(NavBar, null),
+        'div',
+        { className: 'container' },
+        _react2.default.createElement(_NavBar2.default, null),
         _react2.default.createElement(LoginForm, {
           displayError: this.state.failure,
           username: this.state.username,
@@ -22086,7 +22322,224 @@ var _class = function (_React$Component) {
 
 exports.default = _class;
 
-},{"react":182}],213:[function(require,module,exports){
+},{"./NavBar":218,"react":182}],218:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = require("react");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = function () {
+  return _react2.default.createElement(
+    "nav",
+    { className: "navbar navbar-default" },
+    _react2.default.createElement(
+      "div",
+      { className: "container-fluid" },
+      _react2.default.createElement(
+        "div",
+        { className: "navbar-header" },
+        _react2.default.createElement(
+          "a",
+          { className: "navbar-brand", href: "/" },
+          "Bookmarks"
+        )
+      )
+    )
+  );
+};
+
+},{"react":182}],219:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _NavBar = require('./NavBar');
+
+var _NavBar2 = _interopRequireDefault(_NavBar);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var submitSignUpForm = function submitSignUpForm(onSubmit) {
+  return function (e) {
+    e.preventDefault();
+    onSubmit();
+    return false;
+  };
+};
+
+var SignUpForm = function SignUpForm(_ref) {
+  var displayError = _ref.displayError,
+      username = _ref.username,
+      password = _ref.password,
+      onChangeUsername = _ref.onChangeUsername,
+      onChangePassword = _ref.onChangePassword,
+      onSubmit = _ref.onSubmit;
+  return _react2.default.createElement(
+    'div',
+    { className: 'row' },
+    _react2.default.createElement(
+      'div',
+      { className: 'col-md-6 col-md-offset-3 col-xs-12' },
+      _react2.default.createElement(
+        'h1',
+        null,
+        'Sign Up'
+      ),
+      _react2.default.createElement(
+        'form',
+        { onSubmit: submitSignUpForm(onSubmit) },
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group' },
+          _react2.default.createElement(
+            'label',
+            { htmlFor: 'inputUsername' },
+            'Username'
+          ),
+          _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'inputUsername', value: username, onChange: onChangeUsername })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group' },
+          _react2.default.createElement(
+            'label',
+            { htmlFor: 'inputPassword' },
+            'Password'
+          ),
+          _react2.default.createElement('input', { type: 'password', className: 'form-control', id: 'inputPassword', value: password, onChange: onChangePassword })
+        ),
+        _react2.default.createElement(
+          'button',
+          { type: 'submit', className: 'btn btn-primary' },
+          'Sign Up'
+        ),
+        displayError && _react2.default.createElement(
+          'div',
+          { className: 'alert alert-danger' },
+          'Registration failed.'
+        )
+      ),
+      _react2.default.createElement(
+        'a',
+        { href: '/login' },
+        'I already have an account.'
+      )
+    )
+  );
+};
+
+function selectState(state) {
+  return state.signUp;
+}
+
+var _class = function (_React$Component) {
+  _inherits(_class, _React$Component);
+
+  function _class(_ref2) {
+    var store = _ref2.store,
+        actions = _ref2.actions;
+
+    _classCallCheck(this, _class);
+
+    var _this = _possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+
+    _this.actions = actions;
+    _this.store = store;
+    _this.state = selectState(store.getState());
+    _this.unsubscribe = store.subscribe(function () {
+      return _this.setState(selectState(store.getState()));
+    });
+    return _this;
+  }
+
+  _createClass(_class, [{
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this.unsubscribe && this.unsubscribe();
+      this.unsubscribe = null;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _react2.default.createElement(
+        'div',
+        { className: 'container' },
+        _react2.default.createElement(_NavBar2.default, null),
+        _react2.default.createElement(SignUpForm, {
+          displayError: this.state.failure,
+          username: this.state.username,
+          password: this.state.password,
+          onChangeUsername: this.actions.changeUsername(this.store),
+          onChangePassword: this.actions.changePassword(this.store),
+          onSubmit: this.actions.performSignUp(this.store)
+        })
+      );
+    }
+  }]);
+
+  return _class;
+}(_react2.default.Component);
+
+exports.default = _class;
+
+},{"./NavBar":218,"react":182}],220:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var initialState = exports.initialState = {};
+
+var reducer = exports.reducer = function reducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+  var action = arguments[1];
+
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
+
+},{}],221:[function(require,module,exports){
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var initialState = exports.initialState = {};
+
+var reducer = exports.reducer = function reducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+  var action = arguments[1];
+
+  switch (action.type) {
+    default:
+      return state;
+  }
+};
+
+},{}],222:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22096,8 +22549,8 @@ Object.defineProperty(exports, "__esModule", {
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var initialState = exports.initialState = {
-  username: 'foo',
-  password: 'bar',
+  username: '',
+  password: '',
   failure: false
 };
 
@@ -22117,7 +22570,38 @@ var reducer = exports.reducer = function reducer() {
   }
 };
 
-},{}],214:[function(require,module,exports){
+},{}],223:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var initialState = exports.initialState = {
+  username: 'foo',
+  password: 'bar',
+  failure: false
+};
+
+var reducer = exports.reducer = function reducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+  var action = arguments[1];
+
+  switch (action.type) {
+    case 'change-signup-form-username':
+      return _extends({}, state, { username: action.value, failure: false });
+    case 'change-signup-form-password':
+      return _extends({}, state, { password: action.value, failure: false });
+    case 'signup-failed':
+      return _extends({}, state, { failure: true });
+    default:
+      return state;
+  }
+};
+
+},{}],224:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -22130,16 +22614,34 @@ var _loginReducer = require('./reducers/loginReducer');
 
 var login = _interopRequireWildcard(_loginReducer);
 
+var _signUpReducer = require('./reducers/signUpReducer');
+
+var signUp = _interopRequireWildcard(_signUpReducer);
+
+var _adminReducer = require('./reducers/adminReducer');
+
+var admin = _interopRequireWildcard(_adminReducer);
+
+var _bookmarksReducer = require('./reducers/bookmarksReducer');
+
+var bookmarks = _interopRequireWildcard(_bookmarksReducer);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var initialState = {
-  login: login.initialState
+  login: login.initialState,
+  signUp: signUp.initialState,
+  admin: admin.initialState,
+  bookmarks: bookmarks.initialState
 };
 
 var reducer = (0, _redux.combineReducers)({
-  login: login.reducer
+  login: login.reducer,
+  signUp: signUp.reducer,
+  admin: admin.reducer,
+  bookmarks: bookmarks.reducer
 });
 
 exports.default = (0, _redux.createStore)(reducer);
 
-},{"./reducers/loginReducer":213,"redux":188}]},{},[211]);
+},{"./reducers/adminReducer":220,"./reducers/bookmarksReducer":221,"./reducers/loginReducer":222,"./reducers/signUpReducer":223,"redux":188}]},{},[214]);
