@@ -8,10 +8,14 @@ RUN rm -rf /var/lib/apt/lists/*
 RUN pip install --upgrade pip
 
 RUN pip install Flask
+RUN pip install requests
 
 RUN mkdir -p /opt/app
 
-ADD . /opt/app
+ADD ./src /opt/app/src
+ADD ./static /opt/app/static
+ADD ./start.sh /opt/app/start.sh
+
 ADD ./scripts/nginx.conf /etc/nginx/sites-enabled/default
 
 EXPOSE 5000

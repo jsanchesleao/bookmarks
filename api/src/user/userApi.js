@@ -10,6 +10,7 @@ module.exports = function(db) {
     const name = req.params.username
     return userModel.getUserByName(db, name).then(user => {
       if (user) {
+        user.type = user.type || 'client'
         return _.omit(user, ['_id', 'bookmarks','password'])
       }
       else {
