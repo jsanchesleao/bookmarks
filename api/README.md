@@ -38,7 +38,7 @@ Simple execute `npm test` to run the test suite
   {"authenticated": false}
   ```
 
-  The token must be passed in the `Authorization` header, like this:
+  The token is supposed to be passed in the `Authorization` header, like this:
   ```
   Authorization: Bearer R66BF30Q55MLNf3f3dhXqmZtaSBus6beT3GV43UtBUJdIpE6xuC2GXXu2HrrPE3F
   ```
