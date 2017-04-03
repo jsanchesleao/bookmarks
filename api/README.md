@@ -61,7 +61,7 @@ Simple execute `npm test` to run the test suite
   [{"username": "foo"}, {"username": "bar"}]
   ```
 
-  This endoint is secured, so you need to pass a token of an authenticated admin user
+  This endoint is secured, so you need to pass an `Authorization` header with a token of an authenticated admin user
 
 ### GET /user/:username
 
@@ -78,7 +78,7 @@ Simple execute `npm test` to run the test suite
   [{"url": "http://github.com", "name": "github"}, {"url": "http://nodejs.org", "name": "node-home"}]
   ```
 
-  This endpoint is secured by authentication. A token for an admin or for the bookmarks' owner client is needed.
+  This endpoint is secured by authentication. An `Authorization` header with a token for an admin or for the bookmarks' owner client is needed.
 
 ### PUT /user/:username/bookmark/:bookmark
 
@@ -88,7 +88,7 @@ Simple execute `npm test` to run the test suite
   {"url": "http://github.com"}
   ```
 
-  This endpoint is secured by authentication. A token for the bookmarks' owner client is needed.
+  This endpoint is secured by authentication. An `Authorization` header with a token for the bookmarks' owner client is needed.
 
 ### POST /user/:username/bookmark/:bookmark
 
@@ -98,9 +98,9 @@ Simple execute `npm test` to run the test suite
   {"url": "http://github.com"}
   ```
 
-  This endpoint is secured by authentication. A token for the bookmarks' owner client is needed.
+  This endpoint is secured by authentication. An `Authorization` header with a token for the bookmarks' owner client is needed.
 
 ### DELETE /user/:username/bookmark/:bookmark
 
   Endpoint that removes a bookmark with a name for a user
-  This endpoint is secured by authentication. A token for the bookmarks' owner client is needed.
+  This endpoint is secured by authentication. An `Authorization` header with a token for the bookmarks' owner client is needed.
